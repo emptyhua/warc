@@ -1,4 +1,4 @@
-module github.com/go-shiori/warc
+module github.com/emtpyhua/warc
 
 go 1.12
 

@@ -118,12 +118,9 @@ func fixRelativeURIs(doc *html.Node, pageURL *nurl.URL) {
 			return
 		}
 
-		// Replace links with javascript: URIs with text content,
-		// since they won't work after scripts have been removed
-		// from the page.
+		// Replace links with javascript: URIs with #js-removed,
 		if strings.HasPrefix(href, "javascript:") {
-			text := dom.CreateTextNode(dom.TextContent(link))
-			dom.ReplaceChild(link.Parent, text, link)
+			dom.SetAttribute(link, "href", "#js-removed")
 		} else {
 			newHref := createAbsoluteURL(href, pageURL)
 			if newHref == "" {
