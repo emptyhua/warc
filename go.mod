@@ -1,4 +1,4 @@
-module github.com/emtpyhua/warc
+module github.com/emptyhua/warc
 
 go 1.12
 
