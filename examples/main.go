@@ -3,7 +3,7 @@ package main
 import (
 	"log"
 
-	"github.com/go-shiori/warc"
+	"github.com/emptyhua/warc"
 )
 
 func main() {
