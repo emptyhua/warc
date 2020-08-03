@@ -29,6 +29,8 @@ type Archiver struct {
 	UserAgent  string
 	LogEnabled bool
 
+	rootURL string
+
 	resourceMap map[string]struct{}
 }
 
@@ -37,6 +39,7 @@ func (arc *Archiver) Start(req Request) error {
 	if arc.resourceMap == nil {
 		arc.resourceMap = make(map[string]struct{})
 	}
+	arc.rootURL = req.URL
 
 	return arc.archive(req, true)
 }
@@ -156,8 +159,13 @@ func (arc *Archiver) downloadPage(url string) (*http.Response, error) {
 		return nil, err
 	}
 
-	// Send request
+	// set UA
 	req.Header.Set("User-Agent", arc.UserAgent)
+	// set Referer
+	if url != arc.rootURL {
+		req.Header.Set("Referer", arc.rootURL)
+	}
+	// Send request
 	return httpClient.Do(req)
 }
 
