@@ -8,7 +8,7 @@ import (
 
 func main() {
 	// Define variables
-	url := "https://apnews.com/6e151296fb194f85ba69a8babd972e4b"
+	url := "https://sspai.com/post/61826"
 	userAgent := "Shiori/2.0.0 (+https://github.com/go-shiori/shiori)"
 
 	// Ceate archival request

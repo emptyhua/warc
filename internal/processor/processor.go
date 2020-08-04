@@ -5,6 +5,7 @@ import (
 	"io"
 	nurl "net/url"
 	"regexp"
+	"sort"
 	"strings"
 )
 
@@ -108,6 +109,34 @@ func createAbsoluteURL(uri string, base *nurl.URL) string {
 	return base.ResolveReference(tmp).String()
 }
 
+// don't add '=' to url like 'http://abc.com/?xyz'
+func encodeValues(v nurl.Values) string {
+	if v == nil {
+		return ""
+	}
+	var buf strings.Builder
+	keys := make([]string, 0, len(v))
+	for k := range v {
+		keys = append(keys, k)
+	}
+	sort.Strings(keys)
+	for _, k := range keys {
+		vs := v[k]
+		keyEscaped := nurl.QueryEscape(k)
+		for _, v := range vs {
+			if buf.Len() > 0 {
+				buf.WriteByte('&')
+			}
+			buf.WriteString(keyEscaped)
+			if len(v) > 0 {
+				buf.WriteByte('=')
+				buf.WriteString(nurl.QueryEscape(v))
+			}
+		}
+	}
+	return buf.String()
+}
+
 // cleanURL removes fragment (#fragment) and UTM queries from URL
 func cleanURL(url *nurl.URL) {
 	queries := url.Query()
@@ -119,5 +148,5 @@ func cleanURL(url *nurl.URL) {
 	}
 
 	url.Fragment = ""
-	url.RawQuery = queries.Encode()
+	url.RawQuery = encodeValues(queries)
 }
